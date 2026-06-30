@@ -1,0 +1,92 @@
+Sales Data Cleaning & Dashboard — Excel Project
+#Dataset Used
+- <a href="https://github.com/rohit005rohit/Excel-sales-Dashboard/blob/main/cleaned%20Sales%20dashborad.xlsx">Dataset view</a>
+- <a href="https://github.com/rohit005rohit/Excel-sales-Dashboard/blob/main/Dashboard.png">Dashboard view</a>
+
+Overview
+This project takes a 100,000-row sales dataset with realistic data quality issues and transforms it into a clean, analysis-ready dataset with an interactive Excel dashboard. The goal was to replicate the workflow of a professional data analyst: identify data quality issues, document and fix them systematically, then build a dashboard that answers key business questions.
+Dataset
+Source: Synthetic sales transaction data (100,000 rows)
+Columns: Order ID, Order Date, Customer Name, Region, Product, Category, Quantity, Unit Price, Discount %, Total Revenue, Sales Rep, Status
+Files:
+raw_sales_data.csv — original messy dataset
+SalesPractice_100k_Clean.xlsx — final cleaned dataset + dashboard
+Data Quality Issues Identified & Fixed
+Issue
+Column
+Rows Affected
+Action Taken
+Impossible dates (e.g. month 13)
+Order Date
+4,490
+Deleted
+NULL / blank dates
+Order Date
+13,027
+Standardised to blank
+Mixed date formats (dots, dashes, text month)
+Order Date
+All rows
+Converted to YYYY-MM-DD using DATEVALUE + SUBSTITUTE
+Blank customer names
+Customer Name
+18,965
+Replaced with "Unknown"
+Blank / N/A quantity
+Quantity
+2,176
+Replaced with column average
+Currency symbols in price
+Unit Price
+—
+Stripped with Find & Replace, converted to numeric
+Negative unit prices
+Unit Price
+175
+Removed (invalid data entry)
+Inconsistent region casing (north, EAST, etc.)
+Region
+All rows
+Standardised with PROPER + TRIM
+Blank / N/A sales rep
+Sales Rep
+9,531
+Replaced with "Unknown"
+Blank product category
+Category
+1,851
+Recovered via VLOOKUP against product reference table
+Duplicate Order IDs
+Order ID
+0 found
+Verified with Remove Duplicates
+Revenue verification
+Total Revenue
+All rows
+Recalculated: Qty × Unit Price × (1 − Discount%)
+All cleaning steps were performed using native Excel functions (TRIM, PROPER, SUBSTITUTE, DATEVALUE, VLOOKUP, IFERROR, COUNTBLANK, AVERAGEIF) rather than macros, to demonstrate formula-based data cleaning skills.
+Dashboard
+The final dashboard includes:
+4 KPI tiles: Total Revenue, Total Orders, Average Discount, Average Order Value (AOV) — all built with GETPIVOTDATA so they respond live to slicer filters instead of showing static totals
+6 charts: Revenue by Region (bar), Revenue by Category (column), Top 5 Products (bar), Sales Rep Performance (bar), Order Status (pie), Monthly Revenue Trend (column)
+4 interactive slicers: Region, Status, Category, Product — connected to every PivotTable so the entire dashboard updates together on any filter
+Key Insights
+Electronics accounts for roughly 63% of total revenue, making it the dominant category.
+Revenue is evenly distributed across all four regions (~25% each: East ₹15.89Cr, West ₹15.87Cr, North ₹15.73Cr, South ₹15.60Cr), indicating no single region drives the business.
+Laptop Pro is the single highest-revenue product at ₹28.2Cr, more than double the next closest product (Standing Desk at ₹13Cr).
+Average Order Value (AOV) is ₹6,726, with an average discount rate of 9.45% across all orders.
+Order status breakdown: 37% Completed, 38% Pending, 25% Cancelled — a 25% cancellation rate is a notable area for business follow-up.
+Sales rep performance is well balanced across the team (Bob Smith and David Lee marginally ahead), with no single rep dominating order volume or revenue.
+February and November data is incomplete due to the removal of rows with impossible dates — noted as a data limitation rather than hidden.
+Technical note on KPI tiles
+Initial KPI tiles used static cell references (e.g. =pivots!B15), which broke when slicers filtered the underlying pivots — the tiles either froze on the unfiltered total or returned incorrect partial sums. This was fixed by switching to GETPIVOTDATA(), which dynamically reads the pivot's current filtered value rather than a fixed cell address.
+Screenshots
+See the /screenshots folder for dashboard views.
+Tools Used
+Microsoft Excel (PivotTables, PivotCharts, Slicers, formulas)
+No VBA/macros — all logic implemented in native formulas for transparency
+Notes
+This is part of a 3-tool portfolio series using the same dataset:
+Excel (this repo) — cleaning + dashboard
+SQL — relational schema + query library
+Power BI — star schema model + DAX measures + multi-page report
